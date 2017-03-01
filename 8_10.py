@@ -6,7 +6,6 @@ class variosNavegadores(webApp):
     def parse(self, request):
         peticion = request.decode('utf-8', 'strict')
         parsedRequest = peticion.split()[1][1:]
-        
         valor_cookie = peticion.split()[-7][-1:]
         return (parsedRequest  + "  " + cookie + " " + valor_cookie)
 
