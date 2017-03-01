@@ -3,32 +3,27 @@ from webapp import webApp
 import socket
 
 class variosNavegadores(webApp):
-
     def parse(self, request):
         peticion = request.decode('utf-8', 'strict')
-        print(peticion)
         parsedRequest = peticion.split()[1][1:]
-        cookie = peticion.split()[-8][-1:]
+        
         valor_cookie = peticion.split()[-7][-1:]
-        return (parsedRequest + cookie + valor_cookie)
+        return (parsedRequest  + "  " + cookie + " " + valor_cookie)
 
     def process(self, parsedRequest):
         print(parsedRequest)
-        x = parsedRequest("cookie")
-        print(x)
-        operando = parsedRequest.split()[0]
-        if (x > 0):
-            codeHTTP = "200 Ok \r\n" + "set-cookie: operando=" + str(operando)
-            htmlAnswer = "<!DOCTYPE html> <html><body> Me ha llegado este operando " + str(operando) + ", introduzca el siguiente"  + " </body></html>"
-            return (codeHTTP, htmlAnswer)
+        cookieBol = parsedRequest.split()[1]
+        valorCookie = parsedRequest.split()[2]
+        if (cookieBol != 'Cookie:'  or int(valorCookie) == 0 ):
+            operando1 = parsedRequest.split()[0]
+            httpCode = "200 ok \r\nset-cookie: operando=" + str(operando1)
+            htmlAnswer = "<!DOCTYPE html><html><body> El primer operando es " + operando1 + ", introduzca el segundo </body></html>"
         else:
-            codeHTTP = "200 ok \r\n" + "set-cookie: operando="
-            resultado = int(cookie_recibida) + int(operando)
-            htmlAnswer = "<!DOCTYPE html><html><body> La suma de " + cookie_recibida + " y " + operando + " es " + str(resultado) + "</body></html>"
-            return (codeHTTP, htmlAnswer)
-
-    def __init__(self, hostname, port):
-        webApp.__init__(self, hostname, port)
+            operando2 = parsedRequest.split()[0]
+            resultado = int(valorCookie) + int(operando2)
+            httpCode = "200 Ok \r\nset-cookie: operando=" + str(0)
+            htmlAnswer = "<!DOCTYPE html><html><body>El resultado de sumar " + valorCookie + " y " + operando2 + " es-> " + str(resultado) + "</body></html"
+        return(httpCode,htmlAnswer)
 
 if __name__ == "__main__":
     testPrueba = variosNavegadores(socket.gethostname(),1231)
